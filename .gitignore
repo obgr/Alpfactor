@@ -1,0 +1,6 @@
+# .gitignore
+
+# images
+*.img.xz
+*.img
+*.iso
