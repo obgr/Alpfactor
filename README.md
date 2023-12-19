@@ -2,7 +2,7 @@
 
 An Experimental alpine based image for the Recore A7 3d printer mainboard.
 
-Current state: Unfinished, Not working, Not building.
+Current state: Unfinished, Not working, Untested, U-boot building.
 
 ## Why?
 
