@@ -15,6 +15,8 @@ Is it viable to make a slimmer image?
 - Debian 12
 - Docker version 24.0.7
 
+[Docker multi-platform documentation](https://docs.docker.com/build/building/multi-platform/#qemu)
+
 ```bash
 $ sudo apt install qemu-system binfmt-support qemu-user-static
 $ sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
