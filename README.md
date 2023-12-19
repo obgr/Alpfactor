@@ -25,59 +25,11 @@ $ sudo docker run -it  arm64v8/alpine:3.18 uname -m
 
 success?
 
-## Building  Dependencies
+## Docker build
 
-Before incorperating everything in the Dockerized build.
-The dependencies should be translated into alpine packages.
-
-Is it overengineered to split the dependenciy build flows into separate containers? (IMPORT alpine as dep1-builder)
-
-### arm-trusted firmware
+Its faster to Cross compile on x86, therefore we will do so where possible (for now).
 
 ```bash
-sudo apt install make gcc gcc-aarch64-linux-gnu
-```
-
-Compile
-
-```bash
-# git clone
-# patch in changes
-cd ~/git/arm-trusted-firmware
-make CROSS_COMPILE=aarch64-linux-gnu- BL31=~/git/arm-trusted-firmware/build/sun50i_a64/debug/bl31.bin
-```
-
-### SPC Firmware
-
-```bash
-git clone https://github.com/crust-firmware/crust
-cd crust
-export CROSS_COMPILE=or1k-linux-musl-
-make pine64_plus_defconfig
-make scp
-```
-
-### u-boot
-
-```bash
-sudo apt install make gcc gcc-aarch64-linux-gnu bison flex ncurses-base swig libssl-dev
-```
-
-Compile
-
-```bash
-# git clone
-# patch files
-
-cd ~/git/u-boot
-
-# Compile SPL/u-boot
-$ make clean
-$ export CROSS_COMPILE=aarch64-linux-gnu-
-$ make pine64_plus_defconfig
-$ make
-# Compile arm
-make CROSS_COMPILE=aarch64-linux-gnu- BL31=~/git/arm-trusted-firmware/build/sun50i_a64/debug/bl31.bin recore_defconfig
-
-make CROSS_COMPILE=aarch64-linux-gnu- BL31=~/git/arm-trusted-firmware/build/sun50i_a64/debug/bl31.bin
+cd ~/git/alpfactor
+docker build -f docker/Dockerfile -t alpfactor:test .
 ```
