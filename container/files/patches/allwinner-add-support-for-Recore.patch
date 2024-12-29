@@ -1,8 +1,21 @@
+From 0d986679b1a17d80ce2cef42b36b0ee5a5e42aa7 Mon Sep 17 00:00:00 2001
+From: Elias Bakken <elias@iagent.no>
+Date: Tue, 7 Feb 2023 21:56:20 +0100
+Subject: [PATCH] Add support for Recore
+
+---
+ arch/arm/dts/Makefile              |   1 +
+ arch/arm/dts/sun50i-a64-recore.dts | 271 +++++++++++++++++++++++++++++
+ configs/recore_defconfig           |  32 ++++
+ 3 files changed, 304 insertions(+)
+ create mode 100644 arch/arm/dts/sun50i-a64-recore.dts
+ create mode 100644 configs/recore_defconfig
+
 diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 5fc888680b..56cb6119c8 100644
+index 43951a7731..1badd2e38e 100644
 --- a/arch/arm/dts/Makefile
 +++ b/arch/arm/dts/Makefile
-@@ -853,6 +853,7 @@ dtb-$(CONFIG_MACH_SUN50I) += \
+@@ -735,6 +735,7 @@ dtb-$(CONFIG_MACH_SUN50I) += \
  	sun50i-a64-pinephone-1.1.dtb \
  	sun50i-a64-pinephone-1.2.dtb \
  	sun50i-a64-pinetab.dtb \
@@ -12,11 +25,11 @@ index 5fc888680b..56cb6119c8 100644
  dtb-$(CONFIG_MACH_SUN9I) += \
 diff --git a/arch/arm/dts/sun50i-a64-recore.dts b/arch/arm/dts/sun50i-a64-recore.dts
 new file mode 100644
-index 0000000000..ee1d19254d
+index 0000000000..d704731873
 --- /dev/null
 +++ b/arch/arm/dts/sun50i-a64-recore.dts
-@@ -0,0 +1,269 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+@@ -0,0 +1,271 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +// Copyright (c) 2016 ARM Ltd.
 +
 +/dts-v1/;
@@ -57,7 +70,7 @@ index 0000000000..ee1d19254d
 +	reg_usb1_vbus1: usb1-vbus1 {
 +		compatible = "regulator-fixed";
 +		regulator-name = "usb1-vbus1";
-+		gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
++		gpio = <&pregulator-name = "usb1-vbus5";io 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
 +		regulator-always-on;
@@ -273,8 +286,8 @@ index 0000000000..ee1d19254d
 +};
 +
 +&usb_otg {
-+	dr_mode = "peripheral";
-+	vcc-supply = <&reg_dcdc1>;
++  dr_mode = "peripheral";
++  vcc-supply = <&reg_dcdc1>;
 +	status = "okay";
 +};
 +
@@ -283,14 +296,16 @@ index 0000000000..ee1d19254d
 +};
 +
 +&usbphy {
++	usb0_vbus_power_supply = <&usb_power_supply>;
++  vcc_supply = <&reg_dcdc1>;
 +	status = "okay";
 +};
 diff --git a/configs/recore_defconfig b/configs/recore_defconfig
 new file mode 100644
-index 0000000000..b5725f4e3a
+index 0000000000..2a7c40d276
 --- /dev/null
 +++ b/configs/recore_defconfig
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,32 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_SUNXI=y
 +CONFIG_SPL=y
@@ -300,18 +315,28 @@ index 0000000000..b5725f4e3a
 +CONFIG_RESERVE_ALLWINNER_BOOT0_HEADER=y
 +CONFIG_DEFAULT_DEVICE_TREE="sun50i-a64-recore"
 +CONFIG_OF_LIST="sun50i-a64-recore"
++CONFIG_VIDEO=y
 +CONFIG_PHY_REALTEK=y
 +CONFIG_SUN8I_EMAC=y
 +CONFIG_USB_EHCI_HCD=y
 +CONFIG_USB_OHCI_HCD=y
 +CONFIG_ENV_IS_NOWHERE=y
++#CONFIG_ENV_IS_IN_MMC=y
 +CONFIG_SPL_STACK=0x54000
 +CONFIG_SYS_PBSIZE=1024
 +CONFIG_SYS_BOOTM_LEN=0x2000000
 +CONFIG_SUPPORT_EMMC_BOOT=y
++CONFIG_LED=y
++CONFIG_LED_GPIO=y
++CONFIG_SPLASH_SCREEN_ALIGN=y
++CONFIG_VIDEO_LOGO=y
++CONFIG_SPLASH_SCREEN=y
++CONFIG_BMP_16BPP=y
++CONFIG_BMP_24BPP=y
++CONFIG_BMP_32BPP=y
++CONFIG_VIDEO_BMP_RLE8=y
 +CONFIG_DM_REGULATOR=y
 +CONFIG_DM_REGULATOR_FIXED=y
 +CONFIG_CMD_REGULATOR=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="regulator status"
-\ No newline at end of file
+-- 
+2.34.1

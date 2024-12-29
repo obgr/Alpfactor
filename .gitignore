@@ -5,3 +5,4 @@
 *.img
 *.iso
 or1k-linux-musl-10.0.0-20190723.tar.xz
+docker/
